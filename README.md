@@ -6,7 +6,7 @@
 
 > **Note:** Renamed from EtabliTeX to avoid implying affiliation with TeX/LaTeX (whose names are governed by Knuth's TeX license and the LPPL).
 
-Établi Plume is a categorized reference and snippet picker for LaTeX typesetting commands: commands, Greek letters, math operators, formatting, environments and bibliography, with a preview pane and favorites. Offline-only, no dependencies. (Not affiliated with the LaTeX Project or TeX.)
+Établi Plume is a categorized reference and snippet picker for LaTeX typesetting commands: commands, Greek letters, math operators, formatting, environments and bibliography, with a preview pane and favorites. The 123 commands and 10 snippets are bundled for offline use. Search by command, description, category or package; copy exact command/snippet source and keep favourites. Android uses Compose and DataStore; iOS uses SwiftUI. (Not affiliated with the LaTeX Project or TeX.)
 
 ## Availability
 
@@ -19,7 +19,7 @@
 
 ## Privacy
 
-No analytics. No third-party SDKs. No accounts. Credentials, where needed, live only in the platform secure store (iOS Keychain / Android EncryptedSharedPreferences). This app is fully offline.
+No accounts, analytics or network requests. Favourite IDs are stored locally in Android DataStore or iOS UserDefaults. Copy is an explicit user action that places the selected source on the system clipboard. The operating system may include local settings in its device backups.
 
 ## Repository layout
 
@@ -36,6 +36,38 @@ Both platforms are one product, sharing the Coder Design System tokens.
 iOS: SwiftUI. Android: Compose, bundled dictionary JSON
 
 **Status:** In active development — not yet released; dev builds available as a signed APK via [GitHub Releases](../../releases).
+
+## Build and first use
+
+Android prerequisites: JDK 17, Android SDK 36, build-tools 35.0.0, Python 3,
+and `ANDROID_HOME` pointing to that SDK. From a clean checkout:
+
+```sh
+python3 scripts/check_dictionary.py
+cd android
+./gradlew testDebugUnitTest lintDebug assembleDebug bundleRelease
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+Open **Établi Plume**, search `fraction`, copy a command, toggle its favourite,
+and reopen Favourites. Cheatsheet copy buttons copy complete LaTeX source,
+including line breaks. The app provides reference previews; it does not compile
+LaTeX documents. Debug APKs are for testing; release bundles need your signing
+configuration and device acceptance before store submission.
+
+For iOS, open `ios/EtabliTeX.xcodeproj` in Xcode, select a development team and
+an iOS 17+ destination, and run. The Foundation-only model checks can also run
+with macOS command-line tools:
+
+```sh
+swiftc ios/App/Models.swift scripts/check_models.swift -o /tmp/plume-model-check
+/tmp/plume-model-check ios/App/Resources/Dictionary.json
+```
+
+Android tests, lint, APK and release bundle, cross-platform asset validation and
+Swift model checks passed locally. Full iOS compilation and device clipboard,
+favourite persistence, VoiceOver/TalkBack and backup/restore remain unverified.
+See [the refinement record](docs/refinement-2026-10.md).
 
 ## Support development
 

@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
@@ -85,5 +89,16 @@ fun CodeBlock(text: String) {
             .padding(t.space.md),
     ) {
         Text(text, style = t.font.mono.copy(color = t.color.ink))
+    }
+}
+
+
+@Composable
+fun CopyButton(label: String, value: String) {
+    val clipboard = LocalClipboardManager.current
+    var copied by remember(value) { mutableStateOf(false) }
+    LaunchedEffect(copied) { if (copied) { delay(1500); copied = false } }
+    TextButton(onClick = { clipboard.setText(AnnotatedString(value)); copied = true }) {
+        Text(if (copied) "Copied" else label)
     }
 }

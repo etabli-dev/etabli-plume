@@ -8,12 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,17 +29,12 @@ fun DictionaryScreen(app: EtabliTeXApplication) {
     val t = Coder.tokens
     val scope = rememberCoroutineScope()
     val favorites by app.favorites.flow.collectAsState(initial = emptySet())
+    var saveError by remember { mutableStateOf<String?>(null) }
     var query by remember { mutableStateOf("") }
     var category by remember { mutableStateOf<String?>(null) }
 
     val filtered = remember(query, category, app.dictionary) {
-        app.dictionary.entries.filter { cmd ->
-            (category == null || cmd.category == category) &&
-            (query.isBlank() ||
-                cmd.command.contains(query, true) ||
-                cmd.name.contains(query, true) ||
-                cmd.preview.contains(query, true))
-        }
+        app.dictionary.search(query, category)
     }
 
     Column(
@@ -48,6 +43,7 @@ fun DictionaryScreen(app: EtabliTeXApplication) {
     ) {
         PromptHeader(listOf("dictionary", "${filtered.size} of ${app.dictionary.entries.size}"))
         TextInput(value = query, placeholder = "search commands…", onChange = { query = it })
+        saveError?.let { Text(it, color = t.color.danger) }
         if (app.loadError != null) {
             MonoLabel("⚠ ${app.loadError}", color = t.color.danger)
         }
@@ -69,7 +65,11 @@ fun DictionaryScreen(app: EtabliTeXApplication) {
                     CommandRow(
                         cmd = cmd,
                         favorited = cmd.command in favorites,
-                        onToggleFav = { scope.launch { app.favorites.toggle(cmd.command) } },
+                        onToggleFav = { scope.launch {
+                            try { app.favorites.toggle(cmd.command); saveError = null }
+                            catch (e: kotlinx.coroutines.CancellationException) { throw e }
+                            catch (_: Exception) { saveError = "Could not save favourites. Free some storage and try again." }
+                        } },
                     )
                 }
             }
@@ -78,7 +78,7 @@ fun DictionaryScreen(app: EtabliTeXApplication) {
 }
 
 @Composable
-private fun CommandRow(cmd: TeXCommand, favorited: Boolean, onToggleFav: () -> Unit) {
+fun CommandRow(cmd: TeXCommand, favorited: Boolean, onToggleFav: () -> Unit) {
     val t = Coder.tokens
     Card(title = cmd.command, icon = Icons.Default.Book) {
         Text(cmd.name, style = t.font.body)
@@ -94,12 +94,14 @@ private fun CommandRow(cmd: TeXCommand, favorited: Boolean, onToggleFav: () -> U
                 MonoLabel("· $it", color = t.color.faint)
             }
             Spacer(Modifier.weight(1f))
-            Icon(
-                imageVector = if (favorited) Icons.Default.Star else Icons.Default.StarBorder,
-                contentDescription = "favorite",
-                tint = if (favorited) t.color.accent else t.color.faint,
-                modifier = Modifier.size(20.dp).clickable(onClick = onToggleFav),
-            )
+            CopyButton("Copy command", cmd.command)
+            IconButton(onClick = onToggleFav) {
+                Icon(
+                    imageVector = if (favorited) Icons.Default.Star else Icons.Default.StarBorder,
+                    contentDescription = if (favorited) "Remove ${cmd.command} from favourites" else "Add ${cmd.command} to favourites",
+                    tint = if (favorited) t.color.accent else t.color.faint,
+                )
+            }
         }
     }
 }

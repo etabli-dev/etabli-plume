@@ -3,42 +3,20 @@ title: "Funktionen"
 sidebar: de
 ---
 
-Eine geführte Tour durch Établi Plume v0.1.0, illustriert mit echten Screenshots des Builds auf einem Android-Gerät. Plume ist eine Offline-Referenz und ein Snippet-Picker für Typesetting-Befehle: einen Befehl suchen, das gerenderte Symbol ansehen, kopieren und häufig genutzte Befehle mit einem Stern markieren. Keine Konten, kein Netzwerk.
+123 mitgelieferte Satzbefehle und 10 Vorlagen suchen und kopieren sowie Favoriten offline speichern. Plume ist ein Nachschlagewerk und kompiliert keine LaTeX-Dokumente.
 
-## Wörterbuch
+Diese Seite beschreibt den Quellstand vom Oktober 2026. Die Änderungen sind unveröffentlicht und nicht Teil älterer Entwicklungsreleases. Lokale Prüfungen ersetzen keine Geräte-, Live-Server- oder Store-Abnahme.
 
-Die App startet im **Wörterbuch** (Dictionary) — jeder Befehl mit seinem gerenderten Zeichen, durchsuchbar über die obere Leiste. Der Breadcrumb zeigt, wie viele Einträge passen (etwa `123 of 123`). Jede Karte enthält einen Befehl (`\alpha`), seinen Namen, das gerenderte Symbol (α), seine Kategorie und einen Stern zum Favorisieren. Tippen in **search commands…** filtert die Liste live.
+[Current status / Aktueller Stand / État actuel](../current-status.qmd)
+
+Historische Bildschirmfotos aus v0.1.0; sie belegen keine Prüfung des aktuellen Quellstands.
 
 ![Das Wörterbuch: jeder Befehl mit seinem gerenderten Symbol.](../_screens/0.1.0/01-dictionary.png){width=320}
 
-## Kategoriefilter
-
-Die Chips unter dem Suchfeld filtern nach Kategorie — **all · greek letters · math operators · math relations · …** — sodass sich jeweils eine Familie durchsehen lässt. Hier ist die Liste auf die **griechischen Buchstaben** eingeschränkt und zeigt nur noch `\alpha`, `\beta`, `\gamma` und Verwandte.
-
 ![Das Wörterbuch, gefiltert auf die Kategorie der griechischen Buchstaben.](../_screens/0.1.0/02-filter-greek.png){width=320}
-
-## Favoriten
-
-Markieren Sie die am häufigsten genutzten Befehle mit einem Stern; sie sammeln sich unter **Favoriten** für den Zugriff mit einem Tipp. Diese Ansicht bleibt kurz und persönlich — die wenigen Befehle, die Sie tatsächlich nutzen, ohne durch das gesamte Wörterbuch zu scrollen.
 
 ![Favoriten: Ihre markierten Befehle an einem Ort.](../_screens/0.1.0/03-favorites.png){width=320}
 
-## Spickzettel
-
-Der **Spickzettel** (Cheatsheet) ist eine dichte, auf einen Blick erfassbare Übersicht über den gesamten Befehlssatz, nach Kategorie gruppiert — die Ansicht als gedruckte Referenz. Sie tauscht das Detail je Karte des Wörterbuchs gegen Breite, sodass viele Befehle auf einen Blick erfassbar sind.
-
 ![Spickzettel: der gesamte Befehlssatz, nach Kategorie gruppiert.](../_screens/0.1.0/04-cheatsheet.png){width=320}
 
-## Über
-
-Die Seite **Über** (About) beschreibt die App, ihren Umfang und den Hinweis, dass Plume nicht mit TeX oder dem LaTeX Project affiliiert ist. Plume ist die bewusste Umbenennung des früheren EtabliTeX; die Namen TeX/LaTeX unterliegen Knuths TeX-Lizenz bzw. der LPPL.
-
 ![Über: Umfang und der Hinweis zur Nicht-Affiliation mit TeX.](../_screens/0.1.0/05-about.png){width=320}
-
-## Bezug
-
-Établi Plume v0.1.0 ist ein **reiner Android-Entwicklungs-Build**, verteilt als signiertes APK über GitHub Releases:
-
-- [v0.1.0 herunterladen (signiertes APK)](https://github.com/etabli-dev/etabli-plume/releases/tag/v0.1.0)
-
-Veröffentlichungen im App Store, bei Google Play und F-Droid sind geplant, aber noch nicht verfügbar. Der Quellcode liegt unter [`etabli-dev/etabli-plume`](https://github.com/etabli-dev/etabli-plume).

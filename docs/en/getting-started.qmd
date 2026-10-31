@@ -1,28 +1,12 @@
 ---
-title: "Getting Started"
+title: "Getting started"
 sidebar: en
 ---
 
-## Requirements
+Search and copy 123 bundled typesetting commands and 10 snippets, and keep favorites offline. Plume is a reference tool; it does not compile LaTeX documents.
 
-- An iOS or Android device. No account, no sign-in, no internet.
+This page describes the October 2026 source revision. These source changes are not part of older development release downloads. Local checks are distinct from device, live-service and store acceptance.
 
-## Setup
+[Current implementation, prerequisites and commands](../current-status.qmd)
 
-1. Install the app from the store and open it.
-2. You land directly in the categories list — no sign-in.
-
-![On launch you land in the categories list.](../_screens/android-categories.png){width=320}
-
-## Finding a command
-
-1. **Pick a category** (e.g. "Math operators").
-2. **Tap an entry.** The preview pane shows the command, a short explanation and a typical usage example.
-3. **Copy to clipboard** — the command is then available system-wide for paste.
-4. Optionally **mark as favourite** so the command sits at the top of the favourites view next time.
-
-## Notes
-
-- Plume is a **reference**, not a LaTeX compiler — it does not compile documents, it helps you write.
-- All content is bundled inside the app; everything is available even with no network.
-- Plume was previously published as *EtabliTeX*. The app was renamed to avoid suggesting affiliation with TeX/LaTeX.
+[README](https://github.com/etabli-dev/etabli-plume/blob/main/README.md) · [GitHub](https://github.com/etabli-dev/etabli-plume)

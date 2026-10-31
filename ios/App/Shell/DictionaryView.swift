@@ -40,7 +40,7 @@ struct DictionaryView: View {
                     .font(Theme.Font.display).foregroundStyle(Theme.Color.ink)
                 searchBar
                 categoryFilter(dict)
-                let filtered = applyFilters(dict.entries)
+                let filtered = dict.search(query, category: selectedCategory)
                 if filtered.isEmpty {
                     EmptyState(title: "no matches", detail: "try a different name or symbol.",
                                systemImage: "magnifyingglass").frame(height: 240)
@@ -61,7 +61,7 @@ struct DictionaryView: View {
             if !query.isEmpty {
                 Button { query = "" } label: {
                     Image(systemName: "xmark.circle.fill").foregroundStyle(Theme.Color.faint)
-                }.buttonStyle(.plain)
+                }.buttonStyle(.plain).accessibilityLabel("Copy \(entry.command)")
             }
         }
         .padding(Theme.Space.sm)
@@ -93,19 +93,6 @@ struct DictionaryView: View {
                     .strokeBorder(Theme.Color.hairline, lineWidth: 1))
                 .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.sm))
         }.buttonStyle(.plain)
-    }
-
-    private func applyFilters(_ entries: [TeXCommand]) -> [TeXCommand] {
-        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
-        return entries.filter { e in
-            let categoryOK = selectedCategory == nil || e.category == selectedCategory
-            let textOK = q.isEmpty ||
-                e.command.lowercased().contains(q) ||
-                e.name.lowercased().contains(q) ||
-                e.preview.lowercased().contains(q) ||
-                e.category.lowercased().contains(q)
-            return categoryOK && textOK
-        }
     }
 
     private func list(_ entries: [TeXCommand]) -> some View {
@@ -153,13 +140,13 @@ struct DictionaryView: View {
                           ? "star.fill" : "star")
                         .foregroundStyle(favorites.favoriteCommands.contains(entry.command)
                                          ? Theme.Color.warn : Theme.Color.faint)
-                }.buttonStyle(.plain)
+                }.buttonStyle(.plain).accessibilityLabel("Toggle favourite \(entry.command)")
                 Button {
                     UIPasteboard.general.string = entry.command
                     favorites.recordUse(entry.command)
                 } label: {
                     Image(systemName: "doc.on.doc").foregroundStyle(Theme.Color.accent)
-                }.buttonStyle(.plain)
+                }.buttonStyle(.plain).accessibilityLabel("Copy \(entry.command)")
             }
         }.padding(.vertical, Theme.Space.sm)
     }

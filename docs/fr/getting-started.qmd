@@ -3,26 +3,10 @@ title: "Premiers pas"
 sidebar: fr
 ---
 
-## Prérequis
+Rechercher et copier 123 commandes de composition et 10 extraits fournis, et conserver des favoris hors ligne. Plume est un outil de référence ; il ne compile pas de documents LaTeX.
 
-- Un appareil iOS ou Android. Pas de compte, pas d'inscription, pas d'Internet.
+Cette page décrit les sources d’octobre 2026. Ces modifications ne sont pas publiées et ne figurent pas dans les anciennes versions de développement. Les contrôles locaux ne remplacent pas la validation sur appareil, serveur réel ou boutique.
 
-## Configuration
+[Fonctions actuelles, prérequis et commandes (en anglais)](../current-status.qmd)
 
-1. Installer l'appli depuis le store et l'ouvrir.
-2. On arrive directement sur la liste des catégories — pas de connexion.
-
-![Au lancement, on arrive sur la liste des catégories.](../_screens/android-categories.png){width=320}
-
-## Trouver une commande
-
-1. **Choisir une catégorie** (p. ex. « Opérateurs mathématiques »).
-2. **Toucher une entrée.** Le panneau d'aperçu affiche la commande, une courte explication et un exemple d'usage typique.
-3. **Copier dans le presse-papiers** — la commande est ensuite disponible pour collage à l'échelle du système.
-4. Optionnellement **marquer en favori** pour la retrouver en haut de la vue Favoris à la prochaine ouverture.
-
-## Remarques
-
-- Plume est une **référence**, pas un compilateur LaTeX — il ne compile pas de documents, il aide à écrire.
-- Les contenus sont entièrement embarqués dans l'appli ; tout est disponible sans réseau.
-- Plume était auparavant publié sous le nom *EtabliTeX*. L'appli a été renommée pour ne pas suggérer d'affiliation avec TeX/LaTeX.
+[README](https://github.com/etabli-dev/etabli-plume/blob/main/README.md) · [GitHub](https://github.com/etabli-dev/etabli-plume)

@@ -28,6 +28,24 @@ data class TeXDictionary(
     val entries: List<TeXCommand>,
     val snippets: List<TeXSnippet>,
 ) {
+    fun validate() {
+        require(version > 0) { "Unsupported dictionary version" }
+        require(categories.isNotEmpty() && categories.distinct().size == categories.size) { "Invalid dictionary categories" }
+        require(entries.map { it.command }.distinct().size == entries.size) { "Duplicate dictionary command" }
+        require(snippets.map { it.title }.distinct().size == snippets.size) { "Duplicate snippet title" }
+        require(entries.all { it.command.isNotBlank() && it.name.isNotBlank() && it.category in categories }) { "Incomplete dictionary entry" }
+        require(snippets.all { it.title.isNotBlank() && it.category.isNotBlank() && it.code.isNotBlank() }) { "Incomplete snippet" }
+    }
+
+    fun search(query: String, category: String? = null): List<TeXCommand> {
+        val term = query.trim()
+        return entries.filter { entry ->
+            (category == null || entry.category == category) &&
+                (term.isEmpty() || listOf(entry.command, entry.name, entry.preview, entry.category,
+                    entry.pkg.orEmpty(), entry.usage.orEmpty()).any { it.contains(term, ignoreCase = true) })
+        }
+    }
+
     companion object {
         fun loadFromAssets(ctx: Context): TeXDictionary {
             val raw = ctx.assets.open("Dictionary.json")
@@ -53,7 +71,7 @@ data class TeXDictionary(
                         code = o.getString("code"),
                     )
                 },
-            )
+            ).also { it.validate() }
         }
     }
 }

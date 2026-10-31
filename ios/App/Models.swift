@@ -36,16 +36,36 @@ public struct TeXDictionary: Codable, Sendable {
         do {
             let data = try Data(contentsOf: url)
             let decoded = try JSONDecoder().decode(TeXDictionary.self, from: data)
+            try decoded.validate()
             return .success(decoded)
         } catch {
             return .failure(error)
         }
     }
 
+    public func validate() throws {
+        guard version > 0, !categories.isEmpty, Set(categories).count == categories.count,
+              Set(entries.map(\.command)).count == entries.count,
+              Set(snippets.map(\.title)).count == snippets.count,
+              entries.allSatisfy({ !$0.command.isEmpty && !$0.name.isEmpty && categories.contains($0.category) }),
+              snippets.allSatisfy({ !$0.title.isEmpty && !$0.category.isEmpty && !$0.code.isEmpty }) else {
+            throw LoadError.invalid
+        }
+    }
+
+    public func search(_ query: String, category: String? = nil) -> [TeXCommand] {
+        let term = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return entries.filter { entry in
+            (category == nil || entry.category == category) && (term.isEmpty ||
+                [entry.command, entry.name, entry.preview, entry.category, entry.package ?? "", entry.usage ?? ""]
+                    .contains(where: { $0.lowercased().contains(term) }))
+        }
+    }
+
     public enum LoadError: LocalizedError {
-        case missing
+        case missing, invalid
         public var errorDescription: String? {
-            "Dictionary.json missing from app bundle."
+            self == .missing ? "Dictionary.json missing from app bundle." : "Dictionary.json has invalid or duplicate entries."
         }
     }
 }

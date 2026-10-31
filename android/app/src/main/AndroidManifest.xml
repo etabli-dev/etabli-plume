@@ -3,7 +3,7 @@
 
     <application
         android:name=".EtabliTeXApplication"
-        android:label="Établi TeX"
+        android:label="Établi Plume"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.EtabliTeX"

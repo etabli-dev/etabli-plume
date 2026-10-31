@@ -54,5 +54,6 @@ private fun SnippetCard(s: TeXSnippet) {
     Card(title = s.title, icon = Icons.Default.Code) {
         MonoLabel(s.category.lowercase(), color = t.color.faint)
         CodeBlock(s.code)
+        CopyButton("Copy snippet", s.code)
     }
 }

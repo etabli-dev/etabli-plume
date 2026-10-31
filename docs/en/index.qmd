@@ -3,46 +3,10 @@ title: "Établi Plume"
 sidebar: en
 ---
 
-<img src="../_icons/icon-plume.svg" alt="" width="80" align="right" style="margin:0 0 1rem 1rem;">
+Search and copy 123 bundled typesetting commands and 10 snippets, and keep favorites offline. Plume is a reference tool; it does not compile LaTeX documents.
 
-<span class="etabli-badge">Offline tool</span>
+This page describes the October 2026 source revision. These source changes are not part of older development release downloads. Local checks are distinct from device, live-service and store acceptance.
 
-> A fast, offline reference for typesetting commands.
+[Current implementation, prerequisites and commands](../current-status.qmd)
 
-Établi Plume is a categorised reference and snippet picker for LaTeX commands: commands, Greek letters, math operators, formatting, environments and bibliography — with a preview pane and favourites. Fully offline, no external dependencies. App ID `com.raban.etabli.plume`.
-
-![Plume — the Dictionary on Android.](../_screens/0.1.0/01-dictionary.png){width=320}
-
-> Plume is the deliberate renaming of the former **EtabliTeX**. Not affiliated with the LaTeX Project or TeX; the names TeX/LaTeX are governed by Knuth's TeX License and the LPPL.
-
-## Who benefits
-
-Anyone writing or teaching LaTeX who, on the move, needs to grab the right command, a symbol, or the skeleton of an environment — without firing up a search engine first.
-
-## Platforms
-
-| Platform | Status |
-|----------|--------|
-| iOS      | ✓      |
-| Android  | ✓      |
-
-## Privacy
-
-No analytics, no third-party SDKs. The app runs fully offline; all content is embedded, no accounts, no telemetry.
-
-## Installation
-
-Établi Plume is **under active development**. There are no App Store, Google Play or F-Droid releases yet.
-
-| Channel | Status |
-|---------|--------|
-| Android (APK) | **Development build** via [GitHub Releases](https://github.com/etabli-dev/etabli-plume/releases) |
-| App Store (iOS) | planned — not yet available |
-| Google Play | planned — not yet available |
-| F-Droid | planned — not yet available |
-
-Details: see [Getting Started](getting-started.qmd).
-
-## Support
-
-If you find the app useful: [Liberapay](https://liberapay.com/rabanheller/).
+[README](https://github.com/etabli-dev/etabli-plume/blob/main/README.md) · [GitHub](https://github.com/etabli-dev/etabli-plume)

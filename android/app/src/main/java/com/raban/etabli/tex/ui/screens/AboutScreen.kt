@@ -23,8 +23,8 @@ fun AboutScreen(app: EtabliTeXApplication) {
             .verticalScroll(rememberScrollState()).padding(t.space.lg),
         verticalArrangement = Arrangement.spacedBy(t.space.lg),
     ) {
-        PromptHeader(listOf("about", "tex"))
-        Card(title = "Établi TeX — Android", icon = Icons.Default.Info) {
+        PromptHeader(listOf("about", "plume"))
+        Card(title = "Établi Plume — Android", icon = Icons.Default.Info) {
             Text("a pocket TeX dictionary + cheatsheet.", style = t.font.body)
             Row(horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()) {

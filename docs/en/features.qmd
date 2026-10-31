@@ -3,42 +3,20 @@ title: "Features"
 sidebar: en
 ---
 
-A guided walkthrough of Établi Plume v0.1.0, illustrated with real screenshots of the build running on an Android device. Plume is an offline reference and snippet picker for typesetting commands: search a command, see the rendered symbol, copy it, and star the ones you reach for often. No accounts, no network.
+Search and copy 123 bundled typesetting commands and 10 snippets, and keep favorites offline. Plume is a reference tool; it does not compile LaTeX documents.
 
-## Dictionary
+This page describes the October 2026 source revision. These changes are unpublished and are not part of older development releases. Local checks are distinct from device, live-service and store acceptance.
 
-The app opens on the **Dictionary** — every command alongside its rendered glyph, searchable from the top bar. The breadcrumb shows how many entries match (for example, `123 of 123`). Each card carries a command (`\alpha`), its name, the rendered symbol (α), its category, and a star to favourite it. Type in **search commands…** to filter the list live.
+[Current status / Aktueller Stand / État actuel](../current-status.qmd)
+
+Historical screenshots from v0.1.0; these are not verification of the current revision.
 
 ![The Dictionary: every command with its rendered symbol.](../_screens/0.1.0/01-dictionary.png){width=320}
 
-## Category filter
-
-The chips below the search box filter by category — **all · greek letters · math operators · math relations · …** — so you can browse one family at a time. Here the list is narrowed to the **greek letters**, leaving only `\alpha`, `\beta`, `\gamma` and their kin on screen.
-
 ![The Dictionary filtered to the greek-letters category.](../_screens/0.1.0/02-filter-greek.png){width=320}
-
-## Favorites
-
-Star the commands you use most and they collect under **Favorites** for one-tap access. This view stays short and personal — the handful of commands you actually reach for, without scrolling the full dictionary.
 
 ![Favorites: your starred commands in one place.](../_screens/0.1.0/03-favorites.png){width=320}
 
-## Cheatsheet
-
-**Cheatsheet** is a dense, scannable overview of the whole command set, grouped by category — the printed-reference view. It trades the per-card detail of the Dictionary for breadth, so you can take in many commands at a glance.
-
 ![Cheatsheet: the whole command set, grouped by category.](../_screens/0.1.0/04-cheatsheet.png){width=320}
 
-## About
-
-**About** covers the app, its scope, and the note that Plume is unaffiliated with TeX or the LaTeX Project. Plume is the deliberate rename of the former EtabliTeX; the names TeX/LaTeX are governed by Knuth's TeX License and the LPPL.
-
 ![About: scope and the unaffiliated-with-TeX note.](../_screens/0.1.0/05-about.png){width=320}
-
-## Where to get it
-
-Établi Plume v0.1.0 is an **Android-only development build**, distributed as a signed APK from GitHub Releases:
-
-- [Download v0.1.0 (signed APK)](https://github.com/etabli-dev/etabli-plume/releases/tag/v0.1.0)
-
-App Store, Google Play and F-Droid releases are planned but not yet available. Source code lives at [`etabli-dev/etabli-plume`](https://github.com/etabli-dev/etabli-plume).
