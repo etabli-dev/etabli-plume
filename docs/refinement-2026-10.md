@@ -1,5 +1,11 @@
 # October 2026 refinement
 
+## First published CI run and follow-up
+
+On 2026-10-31, the [first published verification run](https://github.com/etabli-dev/etabli-plume/actions/runs/41200127938) failed in the Android SDK installation step with `sdkmanager: command not found` (exit 127), before Android tests, lint or packaging ran. The workflow now explicitly installs Android command-line tools using `android-actions/setup-android` v4.0.4, pinned to its verified commit, before requesting API 36 and build-tools 35.0.0. Existing checks and artifact collection remain intact. YAML and the action reference were checked locally; the follow-up remote Android result is pending. Earlier local build and device evidence below remains separate from this failed remote run.
+
+The same run passed the Swift model checks but failed the full iOS simulator build: the search-clear button referenced an out-of-scope `entry.command` in its accessibility label. Its label is now `Clear search`, matching the action and removing the invalid reference. Local Swift syntax parsing passed; full SwiftUI compilation remains pending the follow-up macOS CI run because local Xcode is unavailable.
+
 ## Purpose, findings and acceptance
 
 Plume is an offline command/snippet reference with persistent favourites. Preserve

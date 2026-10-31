@@ -61,7 +61,7 @@ struct DictionaryView: View {
             if !query.isEmpty {
                 Button { query = "" } label: {
                     Image(systemName: "xmark.circle.fill").foregroundStyle(Theme.Color.faint)
-                }.buttonStyle(.plain).accessibilityLabel("Copy \(entry.command)")
+                }.buttonStyle(.plain).accessibilityLabel("Clear search")
             }
         }
         .padding(Theme.Space.sm)
