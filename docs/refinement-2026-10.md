@@ -59,3 +59,9 @@ The 2026-10-31 follow-up CI run above passed the full unsigned iOS simulator bui
 The final manifest still labelled the installed Android application “Établi TeX”, while the repository and iOS application use Plume. The launcher and About screen now display Établi Plume; application IDs, data paths and signing identities are unchanged so existing installs retain their data. Verify the rebuilt APK's application label and the installed About screen.
 
 Local verification on 2026-10-30: `testDebugUnitTest lintDebug assembleDebug bundleRelease` passed in `plume-android-device-prep` (2 tests; zero failures). APK badging confirms package `com.raban.etabli.tex.debug`, minimum API 26, target API 36 and application label `Établi Plume` across locales. The unsigned AAB is prepared; installed About-screen review and distribution acceptance are separate checks.
+
+## Local Android UI verification — 2026-11-02
+
+On 2026-11-02, the final debug APK (SHA-256 `a52b90024de18f693d25228ab49b1cfd0a4e3e80a4a12e03d5c1c45d410ee6a4`) passed offline use on the owned Android 15/API 35 ARM64 emulator with 4 KiB pages: the 123-entry dictionary and Établi Plume branding loaded; a space-padded fraction search returned the correct entry; Android copy/paste preserved the exact command; the favourite survived relaunch; and an unmatched query recovered when cleared. The full 64-character numbered-equation snippet matched the bundled catalog in Android's clipboard editor, including indentation and newlines. These checks do not establish physical-device, iOS, API 36/16 KiB, full accessibility or store acceptance.
+
+The suite workspace retains `android-local/retry-20261102/native-journey-results.json`, exact installed APK hashes and timestamped XML/screenshots/logs. All grouped cases above passed within their stated scope; boot-time system ANRs preceded the pass and are retained in that record.
