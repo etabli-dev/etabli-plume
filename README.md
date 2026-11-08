@@ -2,11 +2,11 @@
 
 > A fast offline reference for typesetting commands.
 
-`iOS` `Android` · Apache-2.0 · Part of the [Établi Suite](https://github.com/etabli-dev)
+`iOS` `Android` `Desktop preview` · Apache-2.0 · Part of the [Établi Suite](https://github.com/etabli-dev)
 
 > **Note:** Renamed from EtabliTeX to avoid implying affiliation with TeX/LaTeX (whose names are governed by Knuth's TeX license and the LPPL).
 
-Établi Plume is a categorized reference and snippet picker for LaTeX typesetting commands: commands, Greek letters, math operators, formatting, environments and bibliography, with a preview pane and favorites. The 123 commands and 10 snippets are bundled for offline use. Search by command, description, category or package; copy exact command/snippet source and keep favourites. Android uses Compose and DataStore; iOS uses SwiftUI. (Not affiliated with the LaTeX Project or TeX.)
+Établi Plume is a categorized reference and snippet picker for LaTeX typesetting commands: commands, Greek letters, math operators, formatting, environments and bibliography, with a preview pane and favorites. The 123 commands and 10 snippets are bundled for offline use. Search by command, description, category or package; copy exact command/snippet source and keep favourites. Android uses Compose and DataStore; iOS uses SwiftUI; the desktop development preview (Linux, Windows, macOS) uses Compose Multiplatform and packages the same catalogue. (Not affiliated with the LaTeX Project or TeX.)
 
 ## Availability
 
@@ -16,24 +16,28 @@
 - **App Store (iOS):** planned — not yet available.
 - **Google Play:** planned — not yet available.
 - **F-Droid:** planned — not yet available.
+- **Desktop (Linux, Windows, macOS):** development preview — build from source in `desktop/`; no packaged downloads yet.
+
+**Platforms:** the desktop app is a development preview: its Linux `.deb` was built and launch-tested locally, while the Windows and macOS packages are built only in CI. What each platform is for, its current state and the steps to release are in the [platform roadmap](docs/platform-roadmap.md).
 
 ## Privacy
 
-No accounts, analytics or network requests. Favourite IDs are stored locally in Android DataStore or iOS UserDefaults. Copy is an explicit user action that places the selected source on the system clipboard. The operating system may include local settings in its device backups.
+No accounts, analytics or network requests. Favourite IDs are stored locally in Android DataStore, iOS UserDefaults or, on desktop, a `preferences.json` file in the per-user configuration directory. Copy is an explicit user action that places the selected source on the system clipboard. The operating system may include local settings in its device backups.
 
 ## Repository layout
 
 ```
 ios/        SwiftUI app
 android/    Kotlin + Jetpack Compose app
+desktop/    Compose Multiplatform desktop app (development preview)
 fastlane/   F-Droid / store listing metadata
 ```
 
-Both platforms are one product, sharing the Coder Design System tokens.
+All apps are one product, sharing the Coder Design System tokens.
 
 ## Tech
 
-iOS: SwiftUI. Android: Compose, bundled dictionary JSON
+iOS: SwiftUI. Android: Compose, bundled dictionary JSON. Desktop: Compose Multiplatform (Kotlin/JVM), packaging the Android dictionary JSON
 
 **Status:** In active development — not yet released; dev builds available as a signed APK via [GitHub Releases](../../releases).
 
@@ -63,6 +67,20 @@ with macOS command-line tools:
 swiftc ios/App/Models.swift scripts/check_models.swift -o /tmp/plume-model-check
 /tmp/plume-model-check ios/App/Resources/Dictionary.json
 ```
+
+For the desktop development preview, run Gradle with JDK 17 or 21 (the build
+provisions its own JDK 17 toolchain if needed):
+
+```sh
+cd desktop
+./gradlew test             # unit tests
+./gradlew run              # start the app
+./gradlew packageDeb       # Linux .deb; packageMsi / packageDmg on Windows / macOS
+```
+
+The search field has focus on start: type, use ↑/↓, press Enter to copy,
+Shift+Enter to copy a usage example, Ctrl+D to toggle a favourite and Ctrl+T to
+keep the window on top (Cmd instead of Ctrl on macOS).
 
 Android tests, lint, APK and release bundle, cross-platform asset validation and
 Swift model checks passed locally. Full iOS compilation and device clipboard,
