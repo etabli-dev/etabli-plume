@@ -17,7 +17,11 @@ plugins {
 }
 
 group = "com.raban.etabli.tex"
-version = "0.1.0"
+val desktopVersion = providers.fileContents(layout.projectDirectory.file("VERSION")).asText.get().trim()
+require(Regex("[1-9][0-9]*\\.[0-9]+\\.[0-9]+").matches(desktopVersion)) {
+    "desktop/VERSION must contain a three-part version with major >= 1"
+}
+version = desktopVersion
 
 kotlin {
     jvmToolchain(17)
@@ -137,7 +141,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Deb, TargetFormat.Msi, TargetFormat.Dmg)
             packageName = "etabli-plume"
-            packageVersion = "0.1.0"
+            packageVersion = desktopVersion
             description = "Offline reference for typesetting commands"
             vendor = "R. Heller"
             copyright = "Copyright 2026 R. Heller"
@@ -160,8 +164,6 @@ compose.desktop {
                 menu = true
             }
             macOS {
-                // macOS bundle versions need a major version of at least 1.
-                packageVersion = "1.0.0"
                 iconFile.set(iconDir.map { it.file("plume.icns") })
                 bundleID = "com.raban.etabli.tex"
                 dockName = "Établi Plume"

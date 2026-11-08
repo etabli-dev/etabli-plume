@@ -21,10 +21,10 @@ status=0
 xvfb-run -a -s "-screen 0 1280x800x24" sh -c '
   "$1" >"$2/stdout.log" 2>"$2/stderr.log" &
   pid=$!
+  trap "kill $pid 2>/dev/null || true; wait $pid 2>/dev/null || true" EXIT
   sleep 10
   if kill -0 "$pid" 2>/dev/null; then
-    kill "$pid"
-    wait "$pid" 2>/dev/null || true
+    xprop -name "Établi Plume" WM_CLASS >"$2/wm-class.log" || exit 1
     exit 0
   fi
   wait "$pid" || echo "exited early with status $?" >&2
@@ -41,4 +41,15 @@ if grep -qi exception "$work/stderr.log"; then
   echo "FAIL: exception on stderr" >&2
   exit 1
 fi
-echo "OK: running after 10 s, no exception on stderr"
+python3 - "$work/wm-class.log" <<'PYCLASS'
+import pathlib, re, sys
+raw = pathlib.Path(sys.argv[1]).read_text()
+values = re.findall(r'"([^"\n]+)"', raw)
+if len(values) != 2 or not re.fullmatch(r"[A-Za-z0-9_.$-]+", values[1]):
+    raise SystemExit("FAIL: no usable WM_CLASS from the running app: " + raw)
+output = pathlib.Path("build/generated/linux-wm-class.txt")
+output.parent.mkdir(parents=True, exist_ok=True)
+output.write_text(values[1] + "\n")
+print("Measured WM_CLASS: " + values[1])
+PYCLASS
+echo "OK: running after 10 s, no exception on stderr, WM_CLASS measured"

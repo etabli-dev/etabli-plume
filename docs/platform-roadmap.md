@@ -29,9 +29,9 @@ All five platforms are planned; none is "not planned".
 
 | Platform | Status | Technology | How it is built | What is verified | Distribution |
 |---|---|---|---|---|---|
-| Ubuntu/Debian | Development preview 0.1.0 | Compose Multiplatform 1.9.0 desktop, Kotlin 2.2.20, Material 3 (1.8.2, the version the plugin's `compose.material3` alias selects); JDK 17 runtime bundled by jpackage | `cd desktop && ./gradlew packageDeb` → `etabli-plume_0.1.0-1_amd64.deb` | Locally on Ubuntu 26.04 (2026-11-08): 31 unit tests; headless launch under Xvfb of the app image and of the launcher extracted from the .deb; a keyboard session on that launcher driven with `xdotool` (type, Enter, Shift+Enter, Ctrl+D, Esc, ↓, Alt+↓, Ctrl+T) with the clipboard and preferences file read back (window stacking for always-on-top needs a window manager and was not checked); `.deb` checked with `dpkg-deb -I/-c`. **Not** installed with `dpkg`/`apt`, not tried in a real desktop session or on Ubuntu 24.04 / Debian 13 | None yet. `desktop.yml` uploads an unsigned `.deb` as a workflow artifact once pushed |
-| Windows | Development preview 0.1.0 (source only) | Same code as Linux | `./gradlew packageMsi` on `windows-latest` in `desktop.yml` | Not verified locally (CI only); the workflow has not run yet | None; unsigned MSI artifact from CI |
-| macOS | Development preview (source only) | Same code as Linux | `./gradlew packageDmg` on `macos-15` (Apple silicon) in `desktop.yml` | Not verified locally (CI only); the workflow has not run yet; unsigned and not notarized | None; unsigned DMG artifact from CI |
+| Ubuntu/Debian | Development preview; desktop/VERSION is 1.0.0 | Compose Multiplatform 1.9.0 desktop, Kotlin 2.2.20, Material 3 (1.8.2, the version the plugin's `compose.material3` alias selects); JDK 17 runtime bundled by jpackage | `cd desktop && ./gradlew packageDeb` → `etabli-plume_1.0.0-1_amd64.deb` | Locally on Ubuntu 26.04 (2026-11-08): 31 unit tests; headless launch under Xvfb of the app image and of the launcher extracted from the .deb; a keyboard session on that launcher driven with `xdotool` (type, Enter, Shift+Enter, Ctrl+D, Esc, ↓, Alt+↓, Ctrl+T) with the clipboard and preferences file read back (window stacking for always-on-top needs a window manager and was not checked); `.deb` checked with `dpkg-deb -I/-c`. **Not** installed with `dpkg`/`apt`, not tried in a real desktop session or on Ubuntu 24.04 / Debian 13 | None yet. `desktop.yml` uploads an unsigned `.deb` as a workflow artifact once pushed |
+| Windows | Development preview; desktop/VERSION is 1.0.0 | Same code as Linux | `./gradlew packageMsi` on `windows-latest` in `desktop.yml` | Not verified locally; [three-platform baseline CI passed](https://github.com/etabli-dev/etabli-plume/actions/runs/42533357152); current packaging refinements require their own run | None; unsigned MSI artifact from CI |
+| macOS | Development preview (source only) | Same code as Linux | `./gradlew packageDmg` on `macos-15` (Apple silicon) in `desktop.yml` | Not verified locally; [three-platform baseline CI passed](https://github.com/etabli-dev/etabli-plume/actions/runs/42533357152); current packaging refinements require their own run; unsigned and not notarized | None; unsigned DMG artifact from CI |
 | iOS | In development | SwiftUI, iOS 17+, `ios/EtabliTeX.xcodeproj` | Xcode; CI job `swift-model` in `android.yml`: Swift model checks + unsigned simulator build | CI passed on 2026-10-31 (model checks, full unsigned simulator build). No device run, no signing, no TestFlight | Not available; App Store planned |
 | Android | In development; development pre-release | Kotlin 1.9.24, Jetpack Compose, DataStore; AGP 8.13.2; API 26–36 | `cd android && ./gradlew testDebugUnitTest lintDebug assembleDebug bundleRelease` (`android.yml`) | CI passed on 2026-10-31 (unit tests, lint, debug APK, unsigned release AAB); emulator journeys on API 35 on 2026-11-02 ([refinement record](refinement-2026-10.md)) | `v0.1.0` pre-release APK on GitHub Releases (2026-06-24, older than the October/November changes); Google Play and F-Droid planned (store text in `fastlane/metadata`) |
 
@@ -129,7 +129,10 @@ toolchain.
 
 - **Build and run:** `./gradlew run`; tests `./gradlew test`; package
   `./gradlew packageDeb`; headless check
-  `./gradlew createDistributable && scripts/launch-smoke.sh` (needs `xvfb-run`).
+  `./gradlew createDistributable && scripts/launch-smoke.sh` (needs `xvfb-run`
+  and `xprop` from x11-utils). After `packageDeb`, run
+  `python3 scripts/refine_deb.py build/compose/binaries/main/deb/*.deb` to finish
+  the menu/dock metadata using the WM_CLASS measured by that smoke check.
   Under Xvfb, Skia logs a fallback from OpenGL to software rendering on stdout;
   that is expected.
 - **Package formats:** `.deb` now. jpackage takes the dependency names from the
@@ -143,9 +146,12 @@ toolchain.
   namespace the owner controls (for example `io.github.etabli_dev.Plume`).
 - **CI job:** `desktop.yml`, matrix entry `ubuntu-24.04`: dictionary check, unit
   tests, Xvfb launch check, `packageDeb`, artifact `etabli-plume-desktop-deb`.
-- **Known gaps:** the menu entry is named `etabli-plume` because jpackage uses the
-  package name; the window may not be matched to its launcher icon in the GNOME
-  dock (no `StartupWMClass`).
+- **Menu/dock metadata:** CI measures WM_CLASS from the running app under Xvfb
+  and refines the jpackage Debian entry to `Name=Établi Plume` plus that exact
+  `StartupWMClass`, updating package integrity checksums. It validates the final
+  desktop entry before uploading. A raw `packageDeb` without the refinement
+  still has jpackage's default name; the published artifact uses the refined one.
+  Interactive GNOME dock acceptance remains a separate check.
 - **Acceptance:** on clean Ubuntu 24.04 and Debian 13 machines,
   `sudo apt install ./etabli-plume_<version>-1_amd64.deb` succeeds; the menu entry
   starts the app with the search field focused; Enter pastes the exact command into
@@ -172,12 +178,12 @@ toolchain.
 
 ### macOS
 
-- **Build and run:** `./gradlew run`; `./gradlew packageDmg` on a Mac. Only built
-  in CI so far.
+- **Build and run:** `./gradlew run`; `./gradlew packageDmg` on a Mac. Built
+  locally on Apple silicon and in CI; see the [audit](apple-audit-2026-11-08.md).
 - **Package format:** DMG containing `etabli-plume.app` (Dock name "Établi
   Plume"), bundle ID `com.raban.etabli.tex` (the iOS bundle ID). macOS requires a
-  major version of at least 1, so the DMG is versioned `1.0.0` while Linux and
-  Windows packages are `0.1.0`.
+  major version of at least 1. All desktop packages now read the same `1.0.0`
+  value from `desktop/VERSION`; this version does not imply store release readiness.
 - **Signing prerequisites:** Apple Developer Program membership; a "Developer ID
   Application" certificate (`.p12` and password as secrets); notarization
   credentials (App Store Connect API key, or Apple ID with app-specific password,
@@ -222,7 +228,7 @@ toolchain.
 
 ## 5. Milestones
 
-1. **M1 — Desktop packages in CI.** The baseline [workflow passed](https://github.com/etabli-dev/etabli-plume/actions/runs/42525618194); the current recovery refinement requires its own exact-commit workflow. Exit: all
+1. **M1 — Desktop packages in CI.** The recovery refinement [passed all three platforms](https://github.com/etabli-dev/etabli-plume/actions/runs/42533357152); the new version/menu/release changes require their own exact-commit workflow. Exit: all
    three jobs green; `.deb`, `.msi` and `.dmg` artifacts downloadable; run URL
    recorded in `docs/current-status.qmd`.
 2. **M2 — Desktop acceptance on real machines.** Install the CI artifacts on
@@ -231,11 +237,18 @@ toolchain.
    Exit: results recorded per platform; defects filed.
 3. **M3 — Linux desktop entry.** Ship a desktop entry named "Établi Plume" with a
    matching `StartupWMClass` (custom jpackage resources or the Flatpak manifest).
+   Implemented through the measured-class Xvfb smoke plus `refine_deb.py`;
+   exact-commit Linux packaging CI and interactive GNOME acceptance are pending.
    Exit: menu and dock show the right name and icon in GNOME.
 4. **M4 — Release workflow.** On a `v*` tag, build all desktop packages, write
    `SHA256SUMS`, and attach everything to a **draft** GitHub Release (only that job
    gets `contents: write`); the owner publishes. Settle one version source for
-   Gradle. Exit: a test tag produces a complete draft release.
+   Gradle. Implemented: `desktop/VERSION` is now the canonical 1.0.0 source for
+   all desktop packages; `desktop.yml` validates the exact `v<version>` tag,
+   requires all three packages, writes SHA256SUMS and creates only a draft.
+   Manifest checks reject missing, empty and stale-version artifacts. No tag or
+   release was created during the audit. Exit still pending: a test tag produces
+   a complete draft release; the owner reviews and publishes it.
 5. **M5 — Shared module.** Upgrade Android to Kotlin 2.2 with the Compose compiler
    plugin; create `shared/` from the desktop `data/` package; one
    `Dictionary.json`; Android and desktop consume it via composite builds; the iOS
@@ -262,10 +275,10 @@ toolchain.
 - **Windows code signing:** OV certificate or a cloud signing service, or ship
   unsigned previews with a SmartScreen warning.
 - **Google Play** developer account; whether to submit to **F-Droid**.
-- **Version scheme:** desktop Linux/Windows `0.1.0`, macOS DMG `1.0.0` (forced by
-  macOS), mobile marketing version `1.0`. Pick one scheme before the first public
-  desktop release.
-- **Debian file name:** jpackage writes `etabli-plume_0.1.0-1_amd64.deb` (Debian
+- **Version scheme:** desktop packages use `desktop/VERSION` (`1.0.0`), matching
+  the existing macOS bundle version; mobile marketing version remains `1.0`.
+  Future desktop tags must be exactly `v` followed by the canonical version.
+- **Debian file name:** jpackage writes `etabli-plume_1.0.0-1_amd64.deb` (Debian
   revision `-1`); keep it or rename in the release workflow.
 - **Intel Mac support:** add a second macOS build or ship Apple silicon only.
 - **Linux channels:** `.deb` on GitHub Releases only, or also Flathub (needs an

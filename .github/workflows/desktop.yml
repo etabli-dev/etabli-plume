@@ -2,6 +2,7 @@ name: Desktop packages
 on:
   push:
     branches: [main, 'refine/**']
+    tags: ['v*']
     paths:
       - 'desktop/**'
       - 'android/app/src/main/assets/Dictionary.json'
@@ -51,17 +52,37 @@ jobs:
           cache: gradle
       - name: Validate bundled dictionary
         if: runner.os == 'Linux'
-        run: python3 ../scripts/check_dictionary.py
+        run: |
+          python3 ../scripts/check_dictionary.py
+          python3 scripts/test_release_manifest.py
+          python3 scripts/test_refine_deb.py
+      - name: Validate release version
+        env:
+          RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+        run: |
+          release_python=python3
+          if [ "$RUNNER_OS" = "Windows" ]; then release_python=python; fi
+          "$release_python" scripts/release_manifest.py --check-version "$RELEASE_TAG"
       - name: Unit tests
         run: ./gradlew --no-daemon test
       - name: Headless launch smoke test
         if: runner.os == 'Linux'
         run: |
-          command -v xvfb-run >/dev/null || { sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb; }
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends xvfb x11-utils desktop-file-utils
           ./gradlew --no-daemon createDistributable
           scripts/launch-smoke.sh
       - name: Package
         run: ./gradlew --no-daemon ${{ matrix.task }}
+      - name: Align Linux desktop entry
+        if: runner.os == 'Linux'
+        run: |
+          python3 scripts/refine_deb.py build/compose/binaries/main/deb/*.deb
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+          dpkg-deb --extract build/compose/binaries/main/deb/*.deb "$work"
+          find "$work" -name '*.desktop' -exec desktop-file-validate {} +
+          find "$work" -name '*.desktop' -exec cat {} \;
       - name: Upload unsigned package
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -74,3 +95,36 @@ jobs:
         with:
           name: etabli-plume-desktop-reports-${{ matrix.format }}
           path: desktop/build/reports/
+
+  draft-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: etabli-plume-desktop-deb
+          path: release-packages
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: etabli-plume-desktop-msi
+          path: release-packages
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: etabli-plume-desktop-dmg
+          path: release-packages
+      - name: Check packages and write SHA256SUMS
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: python3 desktop/scripts/release_manifest.py --check-version "$RELEASE_TAG" --packages release-packages
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" release-packages/* --verify-tag --draft \
+            --title "Établi Plume $RELEASE_TAG" \
+            --notes "Unsigned desktop packages for owner review. Verify downloads against SHA256SUMS before installation."
