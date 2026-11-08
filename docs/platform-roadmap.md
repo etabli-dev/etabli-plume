@@ -130,11 +130,12 @@ toolchain.
 - **Build and run:** `./gradlew run`; tests `./gradlew test`; package
   `./gradlew packageDeb`; headless check
   `./gradlew createDistributable && scripts/launch-smoke.sh` (needs `xvfb-run`
-  and `xprop` from x11-utils). After `packageDeb`, run
+  and `xprop` from x11-utils, plus `xdotool`). After `packageDeb`, run
   `python3 scripts/refine_deb.py build/compose/binaries/main/deb/*.deb` to finish
   the menu/dock metadata using the WM_CLASS measured by that smoke check.
-  Under Xvfb, Skia logs a fallback from OpenGL to software rendering on stdout;
-  that is expected.
+  The isolated Xvfb smoke uses Skiko's supported software renderer and waits up
+  to 30 seconds for a visible window owned by its launcher PID. It reads WM_CLASS
+  by that window ID, independent of title encoding; no guessed class is used.
 - **Package formats:** `.deb` now. jpackage takes the dependency names from the
   build host, so the CI package (built on Ubuntu 24.04, for example
   `libasound2t64`) targets Ubuntu 24.04+ and Debian 13+. For older distributions

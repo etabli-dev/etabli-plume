@@ -69,7 +69,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends xvfb x11-utils desktop-file-utils
+          sudo apt-get install -y --no-install-recommends xvfb x11-utils xdotool desktop-file-utils
           ./gradlew --no-daemon createDistributable
           scripts/launch-smoke.sh
       - name: Package

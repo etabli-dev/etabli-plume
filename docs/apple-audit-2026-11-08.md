@@ -35,3 +35,10 @@ Kotlin test task reused its unchanged, passing 32-test result; the eight Python
 checks ran afresh. The rebuilt arm64 DMG passed `hdiutil verify`: 67,510,485 bytes,
 SHA-256 `3dead557f84f8261981a5c09792d49f2c1b157926256a63d2ae16f41c6728ffd`.
 This supersedes the earlier artifact above for the current version-source change.
+
+The first packaging follow-up CI passed Windows/macOS but Linux's old fixed
+10-second/title lookup found no matching window. The smoke now waits for a
+visible window owned by the launched PID (30-second bound), looks up WM_CLASS by
+window ID and uses Skiko's supported software renderer only in the isolated
+Xvfb process. Synthetic success and missing-window tests verify PID cleanup on
+both paths. The real Linux repeat remains the acceptance gate.
