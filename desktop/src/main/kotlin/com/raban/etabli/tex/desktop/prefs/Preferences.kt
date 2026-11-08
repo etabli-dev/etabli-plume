@@ -8,6 +8,7 @@ import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
+import java.util.UUID
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -57,7 +58,11 @@ class PreferencesStore(val file: Path) {
         Files.createDirectories(file.parent)
         if (unreadableFile && Files.exists(file)) {
             // Keep the unreadable file for inspection instead of overwriting it.
-            Files.move(file, file.resolveSibling("${file.fileName}.corrupt"), StandardCopyOption.REPLACE_EXISTING)
+            val firstBackup = file.resolveSibling("${file.fileName}.corrupt")
+            val backup = if (Files.exists(firstBackup)) {
+                file.resolveSibling("${file.fileName}.${UUID.randomUUID()}.corrupt")
+            } else firstBackup
+            Files.move(file, backup)
         }
         unreadableFile = false
         val sorted = preferences.copy(favourites = preferences.favourites.toSortedSet())

@@ -42,3 +42,5 @@ jobs:
       - run: /tmp/plume-model-check ios/App/Resources/Dictionary.json
       - name: Build unsigned iOS simulator application
         run: xcodebuild -project ios/EtabliTeX.xcodeproj -target EtabliTeX -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
+      - name: Build unsigned iOS device Release app
+        run: xcodebuild -project ios/EtabliTeX.xcodeproj -target EtabliTeX -configuration Release -sdk iphoneos CODE_SIGNING_ALLOWED=NO build

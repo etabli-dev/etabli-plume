@@ -54,6 +54,19 @@ class PreferencesStoreTest {
         assertEquals(setOf("\\beta"), PreferencesStore(file()).load().favourites)
     }
 
+    @Test fun repeatedRecoveryPreservesEveryUnreadableFile() {
+        Files.createDirectories(file().parent)
+        for (contents in listOf("first damaged preferences", "second damaged preferences")) {
+            file().writeText(contents)
+            val store = PreferencesStore(file())
+            store.load()
+            store.save(Preferences(alwaysOnTop = true))
+        }
+        val backups = file().parent.listDirectoryEntries("*.corrupt").map { it.readText() }.toSet()
+        assertEquals(setOf("first damaged preferences", "second damaged preferences"), backups)
+        assertTrue(PreferencesStore(file()).load().alwaysOnTop)
+    }
+
     @Test fun ignoresUnknownFieldsFromNewerVersions() {
         Files.createDirectories(file().parent)
         file().writeText("""{"favourites": ["\\alpha"], "theme": "light", "windowWidth": 900}""")

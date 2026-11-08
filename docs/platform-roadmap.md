@@ -6,6 +6,8 @@ steps to a release on each. Verification claims are limited to what was actually
 run; "CI only" means the check exists in a workflow but has not been run on that
 platform outside GitHub Actions.
 
+See the [Apple build and recovery audit](apple-audit-2026-11-08.md) for the current local build evidence and recovery fixes.
+
 ## 1. Platform role
 
 Plume is planned for **both desktop and mobile, desktop first**. LaTeX documents
@@ -220,7 +222,7 @@ toolchain.
 
 ## 5. Milestones
 
-1. **M1 — Desktop packages in CI.** Push, run `desktop.yml` on `main`. Exit: all
+1. **M1 — Desktop packages in CI.** The baseline [workflow passed](https://github.com/etabli-dev/etabli-plume/actions/runs/42525618194); the current recovery refinement requires its own exact-commit workflow. Exit: all
    three jobs green; `.deb`, `.msi` and `.dmg` artifacts downloadable; run URL
    recorded in `docs/current-status.qmd`.
 2. **M2 — Desktop acceptance on real machines.** Install the CI artifacts on
