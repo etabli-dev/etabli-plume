@@ -81,8 +81,8 @@ jobs:
           work="$(mktemp -d)"
           trap 'rm -rf "$work"' EXIT
           dpkg-deb --extract build/compose/binaries/main/deb/*.deb "$work"
-          find "$work" -name '*.desktop' -exec desktop-file-validate {} +
-          find "$work" -name '*.desktop' -exec cat {} \;
+          find "$work" -type f -name '*.desktop' -exec desktop-file-validate {} +
+          find "$work" -type f -name '*.desktop' -exec cat {} \;
       - name: Upload unsigned package
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -94,7 +94,10 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: etabli-plume-desktop-reports-${{ matrix.format }}
-          path: desktop/build/reports/
+          path: |
+            desktop/build/reports/
+            desktop/build/compose/binaries/main/deb/
+            desktop/build/generated/linux-wm-class.txt
 
   draft-release:
     if: startsWith(github.ref, 'refs/tags/v')

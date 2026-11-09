@@ -42,3 +42,12 @@ visible window owned by the launched PID (30-second bound), looks up WM_CLASS by
 window ID and uses Skiko's supported software renderer only in the isolated
 Xvfb process. Synthetic success and missing-window tests verify PID cleanup on
 both paths. The real Linux repeat remains the acceptance gate.
+
+That Linux repeat successfully mapped the window and measured its class. The
+next check exposed a bundled-JDK directory named `legal/java.desktop`, which
+matched the initial file glob. Artifact inspection confirmed one real launcher
+plus that directory. Refinement and validation now select files, match the exact
+Plume Exec path, and update every owned launcher copy. A regression uses the
+actual 229-byte jpackage entry and the JDK directory layout; unrelated launchers
+are preserved. Failure artifacts now retain the Debian package and measured
+class for diagnosis. Ten packaging-script tests pass locally.

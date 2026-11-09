@@ -7,6 +7,7 @@ import hashlib
 import os
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import tempfile
 
@@ -21,15 +22,29 @@ def desktop_entry(text, wm_class):
     return text.rstrip() + f"\nStartupWMClass={wm_class}\n"
 
 
+def owned_desktop_entries(root):
+    entries = []
+    for path in sorted(root.rglob("*.desktop")):
+        # The bundled JDK also has a legal/java.desktop directory.
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        match = re.search(r"^Exec=(.+)$", text, flags=re.MULTILINE)
+        command = shlex.split(match.group(1)) if match else []
+        if command and command[0] == "/opt/etabli-plume/bin/etabli-plume":
+            entries.append(path)
+    if not entries:
+        raise ValueError("No desktop entry launches /opt/etabli-plume/bin/etabli-plume")
+    return entries
+
+
 def refine(package, wm_class):
     with tempfile.TemporaryDirectory(prefix="plume-deb-", dir=package.parent) as work:
         root = Path(work) / "root"
         subprocess.run(["dpkg-deb", "--raw-extract", str(package), str(root)], check=True)
-        entries = list(root.rglob("*.desktop"))
-        if len(entries) != 1:
-            raise ValueError("Expected exactly one packaged desktop entry")
-        entry = entries[0]
-        entry.write_text(desktop_entry(entry.read_text(encoding="utf-8"), wm_class), encoding="utf-8")
+        for entry in owned_desktop_entries(root):
+            print(f"Refining launcher: {entry.relative_to(root)}")
+            entry.write_text(desktop_entry(entry.read_text(encoding="utf-8"), wm_class), encoding="utf-8")
         # Keep Debian integrity metadata consistent with the changed launcher.
         sums = []
         for path in sorted(root.rglob("*")):

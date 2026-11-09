@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=etabli-plume
+Comment=Offline reference for typesetting commands
+Exec=/opt/etabli-plume/bin/etabli-plume
+Icon=/opt/etabli-plume/lib/etabli-plume.png
+Terminal=false
+Type=Application
+Categories=Office
+MimeType=
