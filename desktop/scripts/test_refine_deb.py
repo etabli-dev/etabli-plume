@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2026 R. Heller
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: LicenseRef-Proprietary
 import unittest
 import tempfile
 from pathlib import Path

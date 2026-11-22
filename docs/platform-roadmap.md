@@ -111,8 +111,8 @@ ios/       SwiftUI unchanged; the Xcode project references shared's Dictionary.j
   Java resource; Android then stops reading `assets/`.
 - Wire it with Gradle composite builds (`includeBuild("../shared")` in
   `android/settings.gradle.kts` and `desktop/settings.gradle.kts`), so the existing
-  `cd android && ./gradlew …` and `cd desktop && ./gradlew …` commands and any
-  F-Droid recipe keep working.
+  `cd android && ./gradlew …` and `cd desktop && ./gradlew …` commands keep
+  working.
 - iOS keeps its small Swift model; only the JSON becomes shared. A Kotlin/Native
   framework for iOS is not planned.
 - Prerequisite: Android moves from Kotlin 1.9.24 to the Kotlin 2.2 line with the
@@ -218,8 +218,9 @@ toolchain.
 - **Build and run:** see the README and `android/SUBMISSION.md`
   (`./gradlew testDebugUnitTest lintDebug assembleDebug bundleRelease`).
 - **Package formats:** signed APK on GitHub Releases (a `v0.1.0` pre-release
-  exists), AAB for Google Play, F-Droid (store text is prepared in
-  `fastlane/metadata/android`; no F-Droid build recipe yet).
+  exists), AAB for Google Play (store text is prepared in
+  `fastlane/metadata/android`). F-Droid is not planned: it requires a free
+  licence, and the project is proprietary since 22 November 2026.
 - **Signing prerequisites:** the private upload keystore via
   `android/keystore.properties`, Play App Signing, and — if releases are built in
   CI — the keystore and passwords as secrets.
@@ -261,7 +262,7 @@ toolchain.
 7. **M7 — macOS signing and notarization.** Exit: notarized, stapled DMG passes
    `spctl`; decide and, if wanted, add the Intel build.
 8. **M8 — Mobile store releases.** Android: signed AAB to Play internal testing,
-   then production; F-Droid submission. iOS: TestFlight, then App Store. Exit:
+   then production. iOS: TestFlight, then App Store. Exit:
    listings live with the "Établi Plume" name.
 9. **M9 — Flatpak (optional).** Flathub manifest building from source, AppStream
    metainfo with screenshots. Exit: Flathub listing accepted.
@@ -275,7 +276,7 @@ toolchain.
   notarization, TestFlight and the App Store) and who holds it.
 - **Windows code signing:** OV certificate or a cloud signing service, or ship
   unsigned previews with a SmartScreen warning.
-- **Google Play** developer account; whether to submit to **F-Droid**.
+- **Google Play** developer account.
 - **Version scheme:** desktop packages use `desktop/VERSION` (`1.0.0`), matching
   the existing macOS bundle version; mobile marketing version remains `1.0`.
   Future desktop tags must be exactly `v` followed by the canonical version.
