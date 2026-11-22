@@ -2,7 +2,7 @@
 
 > A fast offline reference for typesetting commands.
 
-`iOS` `Android` `Desktop preview` · All rights reserved · Part of the [Établi Suite](https://github.com/etabli-dev)
+`iOS` `Android` `Desktop preview` · AGPL-3.0-only · Part of the [Établi Suite](https://github.com/etabli-dev)
 
 > **Note:** Renamed from EtabliTeX to avoid implying affiliation with TeX/LaTeX (whose names are governed by Knuth's TeX license and the LPPL).
 
@@ -10,12 +10,12 @@
 
 ## Availability
 
-Établi Plume is **under active development**. There are no App Store or Google Play releases yet.
+Établi Plume is **under active development**. There are no App Store, Google Play or F-Droid releases yet.
 
 - **Android:** install the current **development build** as a signed **APK** from **[GitHub Releases](../../releases)**.
 - **App Store (iOS):** planned — not yet available.
 - **Google Play:** planned — not yet available.
-- **F-Droid:** not planned (F-Droid requires a free licence).
+- **F-Droid:** planned — not yet available.
 - **Desktop (Linux, Windows, macOS):** development preview — build from source in `desktop/`; no packaged downloads yet.
 
 **Platforms:** the desktop app is a development preview: its Linux `.deb` was built and launch-tested locally, while the Windows and macOS packages are built only in CI. What each platform is for, its current state and the steps to release are in the [platform roadmap](docs/platform-roadmap.md).
@@ -30,7 +30,7 @@ No accounts, analytics or network requests. Favourite IDs are stored locally in 
 ios/        SwiftUI app
 android/    Kotlin + Jetpack Compose app
 desktop/    Compose Multiplatform desktop app (development preview)
-fastlane/   store listing metadata
+fastlane/   F-Droid / store listing metadata
 ```
 
 All apps are one product, sharing the Coder Design System tokens.
@@ -89,10 +89,10 @@ See [the refinement record](docs/refinement-2026-10.md).
 
 ## Support development
 
-- 💚 **[Liberapay](https://liberapay.com/rabanheller/)** — recurring, 0% commission.
+- 💚 **[Liberapay](https://liberapay.com/rabanheller/)** — recurring, 0% commission, to be shown on the F-Droid listing once published.
 
 ## License
 
-Proprietary, all rights reserved. See [LICENSE](LICENSE). Third-party components keep their own licences (see [NOTICE](NOTICE)). Versions published before 22 November 2026 remain available under their earlier open-source licence.
+GNU Affero General Public License v3.0 only (AGPL-3.0-only), or a commercial licence from the copyright holder (etabli.dev@outlook.com). See [LICENSE](LICENSE). Third-party components keep their own licences (see [NOTICE](NOTICE)). Versions published before 22 November 2026 remain available under their earlier open-source licence.
 
 Copyright 2026 R. Heller.
