@@ -2,7 +2,7 @@
 
 > A fast offline reference for typesetting commands.
 
-`iOS` `Android` `Desktop preview` · Apache-2.0 · Part of the [Établi Suite](https://github.com/etabli-dev)
+`iOS` `Android` `Desktop preview` · AGPL-3.0-only · Part of the [Établi Suite](https://github.com/etabli-dev)
 
 > **Note:** Renamed from EtabliTeX to avoid implying affiliation with TeX/LaTeX (whose names are governed by Knuth's TeX license and the LPPL).
 
@@ -93,6 +93,6 @@ See [the refinement record](docs/refinement-2026-10.md).
 
 ## License
 
-Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+GNU Affero General Public License v3.0 only (AGPL-3.0-only), or a commercial licence from the copyright holder (etabli.dev@outlook.com). See [LICENSE](LICENSE). Third-party components keep their own licences (see [NOTICE](NOTICE)). Versions published before 22 November 2026 remain available under their earlier open-source licence.
 
 Copyright 2026 R. Heller.

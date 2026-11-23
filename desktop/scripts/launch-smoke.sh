@@ -1,6 +1,6 @@
 #!/bin/sh
 # Copyright 2026 R. Heller
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: AGPL-3.0-only
 #
 # Headless launch check for the desktop app. Starts the given launcher under
 # Xvfb with a throw-away preferences directory, waits for its own mapped window

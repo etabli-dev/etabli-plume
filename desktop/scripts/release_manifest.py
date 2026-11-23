@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2026 R. Heller
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: AGPL-3.0-only
 """Validate the desktop version and checksum exactly one package per platform."""
 import argparse
 import hashlib
