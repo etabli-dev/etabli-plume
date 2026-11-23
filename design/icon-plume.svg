@@ -1,16 +1,9 @@
-<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Plume">
+  <!-- Établi Plume icon. Coder design system: #28A745 tile, white glyph, one-line glyph ≈70% of the tile, stroke 44 @1024 (aligned to the suite icon, Nov 2026). -->
   <rect width="1024" height="1024" fill="#28A745"/>
-  <g id="glyph" fill="none" stroke="#FFFFFF" stroke-width="36"
-     stroke-linecap="round" stroke-linejoin="round">
-    <!-- Quill nib pointing down-left -->
-    <!-- Outer nib shape: a tall isoceles teardrop -->
-    <path d="M 380 290
-             L 740 290
-             L 540 760
-             Z"/>
-    <!-- Center slit -->
-    <line x1="560" y1="320" x2="540" y2="700"/>
-    <!-- Bottom point/tail -->
-    <line x1="540" y1="760" x2="500" y2="820"/>
+  <g transform="translate(512,512) scale(1.27307) translate(-560.00,-555.00)">
+  <g stroke-width="34.562" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 500 820 L 540 760 L 380 290 H 740 L 540 760 L 558 340" fill="none" stroke="#FFFFFF"/>
+  </g>
   </g>
 </svg>
