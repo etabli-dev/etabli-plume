@@ -40,6 +40,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: swiftc ios/App/Models.swift scripts/check_models.swift -o /tmp/plume-model-check
       - run: /tmp/plume-model-check ios/App/Resources/Dictionary.json
+      - run: swiftc ios/App/AppearanceModel.swift scripts/check_appearance.swift -o /tmp/plume-appearance-check
+      - run: /tmp/plume-appearance-check
       - name: Build unsigned iOS simulator application
         run: xcodebuild -project ios/EtabliTeX.xcodeproj -target EtabliTeX -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
       - name: Build unsigned iOS device Release app

@@ -5,8 +5,6 @@ import SwiftUI
 import SafariServices
 
 struct SettingsView: View {
-    @AppStorage(ThemePreference.userDefaultsKey) private var themeRaw: String = ThemePreference.system.rawValue
-    private var theme: ThemePreference { ThemePreference(rawValue: themeRaw) ?? .system }
 
     @State private var safariURL: WrappedURL?
 
@@ -19,28 +17,16 @@ struct SettingsView: View {
                         PromptHeader(["settings"])
                         Text("Settings")
                             .font(Theme.Font.display).foregroundStyle(Theme.Color.ink)
-                        themeCard
+                        AppearanceCard()
                         overleafCard
                         aboutCard
-                    }.padding(Theme.Space.lg)
+                    }.padding(Theme.Space.lg).readableColumn()
                 }
             }
             .navigationBarHidden(true)
             .sheet(item: $safariURL) { wrapper in
                 SafariView(url: wrapper.url).ignoresSafeArea()
             }
-        }
-    }
-
-    private var themeCard: some View {
-        Card(title: "appearance", systemImage: "paintbrush") {
-            Picker("Theme", selection: Binding(
-                get: { theme }, set: { themeRaw = $0.rawValue }
-            )) {
-                ForEach(ThemePreference.allCases) { p in
-                    Label(p.label, systemImage: p.systemImage).tag(p)
-                }
-            }.pickerStyle(.segmented)
         }
     }
 

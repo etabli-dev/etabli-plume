@@ -8,6 +8,8 @@
 
 Établi Plume is a categorized reference and snippet picker for LaTeX typesetting commands: commands, Greek letters, math operators, formatting, environments and bibliography, with a preview pane and favorites. The 123 commands and 10 snippets are bundled for offline use. Search by command, description, category or package; copy exact command/snippet source and keep favourites. Android uses Compose and DataStore; iOS uses SwiftUI; the desktop development preview (Linux, Windows, macOS) uses Compose Multiplatform and packages the same catalogue. (Not affiliated with the LaTeX Project or TeX.)
 
+Appearance (iOS, Settings → Appearance): app language (System/Deutsch/English; the iOS interface is fully translated into German, the command reference stays in English), System/Light/Dark and accent colour; default Hugo Coder palette.
+
 ## Availability
 
 Établi Plume is **under active development**. There are no App Store, Google Play or F-Droid releases yet.
@@ -66,6 +68,8 @@ with macOS command-line tools:
 ```sh
 swiftc ios/App/Models.swift scripts/check_models.swift -o /tmp/plume-model-check
 /tmp/plume-model-check ios/App/Resources/Dictionary.json
+swiftc ios/App/AppearanceModel.swift scripts/check_appearance.swift -o /tmp/plume-appearance-check
+/tmp/plume-appearance-check
 ```
 
 For the desktop development preview, run Gradle with JDK 17 or 21 (the build

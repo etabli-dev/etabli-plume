@@ -6,6 +6,7 @@ import SwiftUI
 struct FavoritesView: View {
     let dictionary: TeXDictionary?
     @Environment(Favorites.self) private var favorites
+    @Environment(\.themeAccent) private var accent
 
     private var favoriteEntries: [TeXCommand] {
         guard let dict = dictionary else { return [] }
@@ -43,7 +44,7 @@ struct FavoritesView: View {
                                 list(recentEntries)
                             }
                         }
-                    }.padding(Theme.Space.lg)
+                    }.padding(Theme.Space.lg).readableColumn()
                 }
             }
             .navigationBarHidden(true)
@@ -65,8 +66,8 @@ struct FavoritesView: View {
                         UIPasteboard.general.string = entry.command
                         favorites.recordUse(entry.command)
                     } label: {
-                        Image(systemName: "doc.on.doc").foregroundStyle(Theme.Color.accent)
-                    }.buttonStyle(.plain)
+                        Image(systemName: "doc.on.doc").foregroundStyle(accent)
+                    }.buttonStyle(.plain).accessibilityLabel("Copy \(entry.command)")
                 }.padding(.vertical, Theme.Space.sm)
                 if entry.id != entries.last?.id {
                     Divider().background(Theme.Color.hairline)

@@ -65,7 +65,8 @@ public struct TeXDictionary: Codable, Sendable {
     public enum LoadError: LocalizedError {
         case missing, invalid
         public var errorDescription: String? {
-            self == .missing ? "Dictionary.json missing from app bundle." : "Dictionary.json has invalid or duplicate entries."
+            self == .missing ? String(localized: "Dictionary.json missing from app bundle.")
+                : String(localized: "Dictionary.json has invalid or duplicate entries.")
         }
     }
 }

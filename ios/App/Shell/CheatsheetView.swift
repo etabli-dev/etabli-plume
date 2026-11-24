@@ -15,13 +15,13 @@ struct CheatsheetView: View {
                         PromptHeader(["cheatsheet"])
                         Text("Boilerplate blocks")
                             .font(Theme.Font.display).foregroundStyle(Theme.Color.ink)
-                        MonoLabel("tap any block to copy it.", color: Theme.Color.faint)
+                        MonoLabel("tap copy to put a block on the clipboard.", color: Theme.Color.faint)
                         if let dict = dictionary {
                             content(dict)
                         } else {
                             LoadingState("loading…")
                         }
-                    }.padding(Theme.Space.lg)
+                    }.padding(Theme.Space.lg).readableColumn()
                 }
             }
             .navigationBarHidden(true)
@@ -38,7 +38,7 @@ struct CheatsheetView: View {
         }
         return VStack(spacing: Theme.Space.lg) {
             ForEach(ordered, id: \.self) { cat in
-                Card(title: cat, systemImage: "rectangle.stack") {
+                Card(title: LocalizedStringKey(cat), systemImage: "rectangle.stack") {
                     VStack(spacing: Theme.Space.md) {
                         ForEach(grouped[cat] ?? []) { snippet in
                             SnippetBlock(snippet: snippet)
@@ -53,11 +53,12 @@ struct CheatsheetView: View {
 private struct SnippetBlock: View {
     let snippet: TeXSnippet
     @State private var copied = false
+    @Environment(\.themeAccent) private var accent
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Space.xs) {
             HStack {
-                Text(snippet.title)
+                Text(LocalizedStringKey(snippet.title))
                     .font(Theme.Font.headline).foregroundStyle(Theme.Color.ink)
                 Spacer()
                 Button {
@@ -71,7 +72,7 @@ private struct SnippetBlock: View {
                         Image(systemName: copied ? "checkmark" : "doc.on.doc")
                         Text(copied ? "copied" : "copy").font(Theme.Font.mono)
                     }
-                    .foregroundStyle(copied ? Theme.Color.accent : Theme.Color.faint)
+                    .foregroundStyle(copied ? accent : Theme.Color.faint)
                 }.buttonStyle(.plain)
             }
             Text(snippet.code)

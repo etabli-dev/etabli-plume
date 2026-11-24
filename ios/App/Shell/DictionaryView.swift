@@ -8,6 +8,7 @@ struct DictionaryView: View {
     let loadError: String?
 
     @Environment(Favorites.self) private var favorites
+    @Environment(\.themeAccent) private var accent
     @State private var query: String = ""
     @State private var selectedCategory: String? = nil
 
@@ -47,7 +48,7 @@ struct DictionaryView: View {
                 } else {
                     list(filtered)
                 }
-            }.padding(Theme.Space.lg)
+            }.padding(Theme.Space.lg).readableColumn()
         }
     }
 
@@ -75,24 +76,26 @@ struct DictionaryView: View {
             HStack(spacing: Theme.Space.sm) {
                 chip("all", active: selectedCategory == nil) { selectedCategory = nil }
                 ForEach(dict.categories, id: \.self) { cat in
-                    chip(cat, active: selectedCategory == cat) { selectedCategory = cat }
+                    // Bundled category names are looked up in Localizable.xcstrings; the filter keeps the raw value.
+                    chip(LocalizedStringKey(cat), active: selectedCategory == cat) { selectedCategory = cat }
                 }
             }
         }
     }
 
-    private func chip(_ label: String, active: Bool, action: @escaping () -> Void) -> some View {
+    private func chip(_ label: LocalizedStringKey, active: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(label)
                 .font(Theme.Font.mono)
-                .foregroundStyle(active ? Theme.Color.surface : Theme.Color.ink)
+                .foregroundStyle(active ? Theme.Color.onAccent : Theme.Color.ink)
                 .padding(.horizontal, Theme.Space.sm)
                 .padding(.vertical, Theme.Space.xs)
-                .background(active ? Theme.Color.accent : Theme.Color.paper)
+                .background(active ? accent : Theme.Color.paper)
                 .overlay(RoundedRectangle(cornerRadius: Theme.Radius.sm)
                     .strokeBorder(Theme.Color.hairline, lineWidth: 1))
                 .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.sm))
         }.buttonStyle(.plain)
+        .accessibilityAddTraits(active ? .isSelected : [])
     }
 
     private func list(_ entries: [TeXCommand]) -> some View {
@@ -141,11 +144,12 @@ struct DictionaryView: View {
                         .foregroundStyle(favorites.favoriteCommands.contains(entry.command)
                                          ? Theme.Color.warn : Theme.Color.faint)
                 }.buttonStyle(.plain).accessibilityLabel("Toggle favourite \(entry.command)")
+                .accessibilityAddTraits(favorites.favoriteCommands.contains(entry.command) ? .isSelected : [])
                 Button {
                     UIPasteboard.general.string = entry.command
                     favorites.recordUse(entry.command)
                 } label: {
-                    Image(systemName: "doc.on.doc").foregroundStyle(Theme.Color.accent)
+                    Image(systemName: "doc.on.doc").foregroundStyle(accent)
                 }.buttonStyle(.plain).accessibilityLabel("Copy \(entry.command)")
             }
         }.padding(.vertical, Theme.Space.sm)
